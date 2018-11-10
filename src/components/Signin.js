@@ -2,10 +2,33 @@ import React,{Component} from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import './../App.css'
-import  {firebaseConnect} from  'react-redux-firebase';
+import  {firebaseConnect,getFirebase} from  'react-redux-firebase';
 import GoogleButton from 'react-google-button';
 class Signin  extends Component{
 
+
+    componentDidMount() {
+        this.props.firebase.auth().onAuthStateChanged(
+            (user) => {
+                if (user) {
+                    const uid = user.uid;
+
+                    var lastOnlineRef = this.props.firebase.database().ref('users/' + uid + '/lastOnline');
+                    var myConnectionsRef = this.props.firebase.database().ref('users/' + uid + '/connection');
+                    var connectedRef = this.props.firebase.database().ref('.info/connected');
+
+                    connectedRef.on('value', function (snap) {
+                        if (snap.val() === true) {
+                            myConnectionsRef.set(true);
+                            lastOnlineRef.onDisconnect().set(getFirebase().database.ServerValue.TIMESTAMP);
+                            myConnectionsRef.onDisconnect().set(false);
+                        }
+                    });
+                }
+                //this.setState({isSignedIn: !!user})
+            }
+        );
+    }
 
     render(){
         return(

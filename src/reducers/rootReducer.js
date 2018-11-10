@@ -6,6 +6,7 @@ import isSigned from './SignInReducer'
 import authRudcer from './authReducer';
 import selectedFriendChatting from './friendChatingReducer'
 import sendingMessage from './sendMessageReducer';
+import isFriendStar from  './friendStarReducer'
 
 // Initialize firebase instance
 
@@ -29,6 +30,7 @@ export const rootReducer = combineReducers({
     isSigned: isSigned,
     selectedFriendChatting: selectedFriendChatting,
     sendingMessage : sendingMessage,
+    isFriendStar: isFriendStar,
 
     // firestore: firestoreReducer // <- needed if using firestore
 });

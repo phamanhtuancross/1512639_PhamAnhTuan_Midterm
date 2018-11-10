@@ -2,6 +2,7 @@ export const config = {
     apiKey: 'AIzaSyBl4UnUkiYRC7jNLXdRtd2LsTuaxER09Ow',
     authDomain: 'chatapp-midterm.firebaseapp.com',
     databaseURL: 'https://chatapp-midterm.firebaseio.com',
+    storageBucket : 'gs://chatapp-midterm.appspot.com',
 
 };
 

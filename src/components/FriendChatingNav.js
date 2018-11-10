@@ -1,11 +1,27 @@
 import React,{Component} from 'react';
-import  {connect} from 'react-redux'
+import  {connect} from 'react-redux';
+import  './../App.css';
+import {getFirebase} from "react-redux-firebase";
 
 class FriendChatingNav extends Component{
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            isStartFriend :  false,
+        }
+    }
+
+    onClickStartButton = ()=>{
+        this.setState({
+            isStartFriend: !this.state.isStartFriend,
+        });
+    };
+
     render() {
 
-
-        var {selectedFriendChatting} = this.props;
+        const {selectedFriendChatting} = this.props;
+        const {isStartFriend} = this.state;
 
         return (
                 <div className="chat-header clearfix">
@@ -18,7 +34,7 @@ class FriendChatingNav extends Component{
                         <div className="chat-with">Chat with  {selectedFriendChatting.displayName}</div>
                         <div className="chat-num-messages">already 1 902 messages</div>
                     </div>
-                    <i className="fa fa-star" />
+                    <i className={isStartFriend?"fa fa-star yellow-star": "fa fa-star"}  onClick={this.onClickStartButton}/>
                 </div>
         );
     }
@@ -28,6 +44,14 @@ class FriendChatingNav extends Component{
 const mapStateToProps = (state)=>{
     return{
         selectedFriendChatting: state.selectedFriendChatting,
+    }
+};
+
+const mapDispatchToProps = (dispatch) =>{
+    return{
+        onChangeStarState : () =>{
+            dispatch();
+        }
     }
 };
 export default connect(mapStateToProps,null)(FriendChatingNav);

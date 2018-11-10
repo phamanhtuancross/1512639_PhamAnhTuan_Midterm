@@ -12,3 +12,9 @@ export const enteredTextAred = () =>{
       type: Types.SENDING_MESSAGE,
   }
 };
+
+export  const onChangeFriendtarState = ()=>{
+  return{
+      type: Types.CHANGE_FRIEND_STAR_STATE
+  }
+};

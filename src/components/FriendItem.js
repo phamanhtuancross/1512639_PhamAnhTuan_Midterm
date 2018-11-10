@@ -4,7 +4,6 @@ import  {connect} from 'react-redux'
 
 class FriendItem extends Component {
 
-
     onClickItem = (userData)=>{
         this.props.onSelectedFriendChating(userData);
     };
@@ -21,7 +20,7 @@ class FriendItem extends Component {
                         {userData.displayName}
                     </div>
                     <div className="status">
-                        <i className="fa fa-circle online" /> online
+                        <i className={userData.connection === true? 'fa fa-circle online': 'fa fa-circle' }  /> {userData.connection === true? 'online': calcLastTimeOnline(userData.lastOnline)}
                     </div>
                 </div>
             </li>
@@ -29,6 +28,47 @@ class FriendItem extends Component {
     }
 }
 
+var calcLastTimeOnline = (lastTimeOnline) => {
+    var currentTicks = new Date().getTime();
+    var timeDiff = Math.abs(currentTicks - lastTimeOnline);
+    var seconds_from_T1_to_T2 = timeDiff / 1000;
+    var seconds_Between_Dates = Math.abs(seconds_from_T1_to_T2);
+
+    return convertSecondToTime(seconds_Between_Dates);
+
+
+
+   // alert(currentTicks);
+};
+
+var convertSecondToTime = (inputSeconds) =>{
+
+
+    if(isNaN(inputSeconds)){
+        return 'offline';
+    }
+    var days = 0;
+    var hour = 0;
+    var minutes = 0;
+    var seconds = 0;
+
+    if(inputSeconds > 24* 60 * 60){
+        days = Math.ceil(inputSeconds / (24 * 60 * 60));
+        inputSeconds = inputSeconds % (24 * 60 * 60);
+    }
+
+    if(inputSeconds > 60* 60){
+        hour = Math.ceil(inputSeconds/(60 * 60));
+        inputSeconds = inputSeconds % (60 * 60);
+    }
+
+    if(inputSeconds > 60){
+        minutes = Math.ceil(inputSeconds/60);
+        seconds = Math.ceil(inputSeconds %60) ;
+    }
+
+    return 'online ' +(days > 0?  days + ' ngày ': '')  + (hour > 0?  hour + ' giờ ': '') + (minutes > 0? minutes + ' phút' : '') + ( seconds+ ' giây trước');
+};
 var mapDispatchToProps =(dispatch)=>{
     return{
         onSelectedFriendChating: (selectedFriend)=>{dispatch(selectedFrientChating(selectedFriend));}
