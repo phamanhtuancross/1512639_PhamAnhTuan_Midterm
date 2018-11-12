@@ -2,26 +2,33 @@ import React,{Component} from 'react';
 import  {connect} from 'react-redux';
 import  './../App.css';
 import {getFirebase} from "react-redux-firebase";
+import {onChangeFriendtarState} from './../actions/friendChatingAction'
 
 class FriendChatingNav extends Component{
+
 
     constructor(props) {
         super(props);
         this.state = {
-            isStartFriend :  false,
+            isFriendStar: false,
         }
     }
 
+
     onClickStartButton = ()=>{
-        this.setState({
-            isStartFriend: !this.state.isStartFriend,
+        const {selectedFriendChatting} = this.props;
+        console.log('selected friend :'); console.log(selectedFriendChatting);
+
+        getFirebase().ref("startState").child(getFirebase().auth().currentUser.uid).child(selectedFriendChatting.key).update({
+            isFriendStar: !selectedFriendChatting.isFriendStar,
         });
+
+        this.props.onChangeStarState();
     };
 
     render() {
 
         const {selectedFriendChatting} = this.props;
-        const {isStartFriend} = this.state;
 
         return (
                 <div className="chat-header clearfix">
@@ -34,7 +41,7 @@ class FriendChatingNav extends Component{
                         <div className="chat-with">Chat with  {selectedFriendChatting.displayName}</div>
                         <div className="chat-num-messages">already 1 902 messages</div>
                     </div>
-                    <i className={isStartFriend?"fa fa-star yellow-star": "fa fa-star"}  onClick={this.onClickStartButton}/>
+                    <i className={selectedFriendChatting.isFriendStar?"fa fa-star yellow-star": "fa fa-star"}  onClick={this.onClickStartButton}/>
                 </div>
         );
     }
@@ -50,9 +57,9 @@ const mapStateToProps = (state)=>{
 const mapDispatchToProps = (dispatch) =>{
     return{
         onChangeStarState : () =>{
-            dispatch();
+            dispatch(onChangeFriendtarState());
         }
     }
 };
-export default connect(mapStateToProps,null)(FriendChatingNav);
+export default connect(mapStateToProps,mapDispatchToProps)(FriendChatingNav);
 

@@ -11,19 +11,34 @@ class TypingText extends Component{
         this.state = {
             content: '',
             selectedImage: null,
+            imageURl: null,
             messageToSend: ''
         }
     }
 
 
+    isValidURL(str) {
+        var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+        if(!regex .test(str)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     onChange = (event) =>{
         var target = event.target;
         var name = target.name;
         var value = target.value;
 
-        this.setState({
-            [name]: value,
-        });
+        if(this.isValidURL(value)){
+            this.setState({
+                imageURl: value,
+            });
+        }
+
+            this.setState({
+                [name]: value,
+            });
     };
 
 
@@ -33,7 +48,7 @@ class TypingText extends Component{
         //         message : 'abc',
         //     });
 
-        var {content} = this.state;
+        var {content,imageURl} = this.state;
         var self = this;
 
         if(this.state.selectedImage != null){
@@ -41,15 +56,6 @@ class TypingText extends Component{
 
             var storageRef = getFirebase().storage().ref('message').child('images').child(selectedImage.name);
 
-// Create a reference to 'mountains.jpg'
-//         var mountainsRef = storageRef.child('mountains.jpg');
-//
-// // Create a reference to 'images/mountains.jpg'
-//         var mountainImagesRef = storageRef.child('images/mountains.jpg');
-
-// While the file names are the same, the references point to different files
-//         mountainsRef.name === mountainImagesRef.name;     // true
-//         mountainsRef.fullPath === mountainImagesRef.fullPath;
             storageRef.put(selectedImage).then(function(snapshot){
                 storageRef.getDownloadURL().then(url =>{
                     getFirebase().database().ref('/persistenceValue/total')
@@ -77,6 +83,7 @@ class TypingText extends Component{
                             imageURl: url,
                         });
 
+
                     });
 
                     self.setState({
@@ -102,7 +109,7 @@ class TypingText extends Component{
                     content:content,
                     time: getCurrentTime(),
                     type: 'auth',
-                    imageURl: null,
+                    imageURl: imageURl,
 
                 });
 
@@ -111,8 +118,9 @@ class TypingText extends Component{
                     content:content,
                     time: getCurrentTime(),
                     type: 'friend',
-                    imageURl: null,
+                    imageURl: imageURl,
                 });
+
 
                 self.setState({
                     content: '',

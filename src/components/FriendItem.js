@@ -1,6 +1,8 @@
 import React,{Component} from 'react';
 import {selectedFrientChating} from './../actions/friendChatingAction'
 import  {connect} from 'react-redux'
+import {firebaseConnect} from  'react-redux-firebase'
+import {compose} from 'redux'
 
 class FriendItem extends Component {
 
@@ -20,7 +22,7 @@ class FriendItem extends Component {
                         {userData.displayName}
                     </div>
                     <div className="status">
-                        <i className={userData.connection === true? 'fa fa-circle online': 'fa fa-circle' }  /> {userData.connection === true? 'online': calcLastTimeOnline(userData.lastOnline)}
+                        <i className={userData.connection === true? 'fa fa-circle online': 'fa fa-circle offline' }  /> {userData.connection === true? 'online': calcLastTimeOnline(userData.lastOnline)}
                     </div>
                 </div>
             </li>
@@ -67,12 +69,16 @@ var convertSecondToTime = (inputSeconds) =>{
         seconds = Math.ceil(inputSeconds %60) ;
     }
 
-    return 'online ' +(days > 0?  days + ' ngày ': '')  + (hour > 0?  hour + ' giờ ': '') + (minutes > 0? minutes + ' phút' : '') + ( seconds+ ' giây trước');
+    return 'online ' +(days > 0?  days + ' ngày ': '')  + (hour > 0?  hour + ' giờ ': '') + (minutes > 0? minutes + ' phút ' : '') + ( seconds+ ' giây trước');
 };
 var mapDispatchToProps =(dispatch)=>{
     return{
         onSelectedFriendChating: (selectedFriend)=>{dispatch(selectedFrientChating(selectedFriend));}
     }
 };
-export default connect(null,mapDispatchToProps)(FriendItem);
+
+export default compose(firebaseConnect(props =>[{
+        path: 'startState'
+    }]
+), connect(null,mapDispatchToProps))(FriendItem);
 

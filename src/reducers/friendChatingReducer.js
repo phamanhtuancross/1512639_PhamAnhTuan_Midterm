@@ -8,6 +8,9 @@ const friendChatingReducer = (state = initialState, action)=>{
             state = action.selectedFriendChatting;
             console.log(state);
             return{...state};
+        case Types.CHANGE_FRIEND_STAR_STATE:
+            state.isFriendStar =  !state.isFriendStar;
+            return{...state};
         default:
             return state;
     }
